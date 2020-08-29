@@ -28,11 +28,11 @@ exports.reportVideoError = functions.https.onRequest(async(req,res)=>{
 });
 
 exports.getRandom = functions.https.onRequest((req,res)=>{
-    let list = getList();
+    let list = getList(req.query.id);
     var randomNumber = list[Math.floor(Math.random() * list.length)];
     //res.status(200).send({test: random});
     cors(req,res,()=>{
-        res.status(200).send({result:randomNumber});
+        res.status(200).send({result:randomNumber, req:req.query.id});
     });
 });
 
@@ -40,9 +40,18 @@ exports.helloWorld = functions.https.onRequest((req, res) => {
     res.status(200).send('Hello, World!');
 });
 
+exports.getRequestTest = functions.https.onRequest((req, res)=>{
+    cors(req, res, ()=>{
+        res.status(200).send(req);
+    })
+})
+
 // firebase.cmd deploy --only functions
-function getList(){
-    let list = [
+function getList(id){
+    
+    let list = [1371,1370,1369,1368,1367,1365,1364,1363,1362,1361,1360,
+        1359,1358,1355,1354,1353,1352,1351,1349,1348,1340,1337,1336,1332,1329,1328,1327,1323,1318,1317,1316,1310,1309,
+        1303,1302,1301,1300,1299,1298,1297,1294,1288,1287,1286,1285,1284,1279,1278,1277,1271,1267,1260,
         1259,1258,1257,1256,1254,1251,1248,1247,1246,1245,
         1244,1243,
         1238,1236,1235,1234,1233,1232,1229,1228,1226,1225,
@@ -90,5 +99,6 @@ function getList(){
         84,81,80,79,78,77,75,73,71,70,69,66,65,64,63,58,
         56,55,54,53,52,50,49,48,47,32,31,30,29,28,27,9,5
     ];
+    if(!isNaN(id)) list = list.filter(x=>x !== Number(id));
     return list;
 }
